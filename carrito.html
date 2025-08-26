@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Online - Carrito de Compras</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #f39c12, #e74c3c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .product-sku {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .product-description {
+            color: #5a5a5a;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .product-price {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .add-to-cart-btn:hover {
+            background: linear-gradient(45deg, #2980b9, #1e6b96);
+            transform: translateY(-2px);
+        }
+
+        .add-to-cart-btn:active {
+            transform: translateY(0);
+        }
+
+        .cart-summary {
+            background: #f8f9fa;
+            padding: 30px;
+            border-top: 3px solid #667eea;
+        }
+
+        .cart-items {
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid #3498db;
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .cart-item-sku {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 20px;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .qty-btn:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+
+        .remove-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .remove-btn:hover {
+            background: #c0392b;
+        }
+
+        .cart-total {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #3498db;
+        }
+
+        .whatsapp-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #25d366, #128c7e);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .whatsapp-btn:hover {
+            background: linear-gradient(45deg, #128c7e, #0f6b5c);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .bounce {
+            animation: bounce 0.6s;
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .cart-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .cart-item-quantity {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛍️ Tienda Online</h1>
+            <p>Productos exclusivos con envío a WhatsApp</p>
+        </div>
+
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(45deg, #e74c3c, #c0392b);">📱</div>
+                <div class="product-info">
+                    <div class="product-name">Smartphone Premium</div>
+                    <div class="product-sku">SKU: SP-001</div>
+                    <div class="product-description">Teléfono inteligente de última generación con pantalla OLED y cámara de 108MP</div>
+                    <div class="product-price">$899.99</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('SP-001', 'Smartphone Premium', 899.99, this)">
+                        Agregar al Carrito
+                    </button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(45deg, #3498db, #2980b9);">💻</div>
+                <div class="product-info">
+                    <div class="product-name">Laptop Gaming</div>
+                    <div class="product-sku">SKU: LG-002</div>
+                    <div class="product-description">Laptop para gaming con procesador i7, 16GB RAM y tarjeta gráfica RTX 4060</div>
+                    <div class="product-price">$1,299.99</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('LG-002', 'Laptop Gaming', 1299.99, this)">
+                        Agregar al Carrito
+                    </button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(45deg, #9b59b6, #8e44ad);">🎧</div>
+                <div class="product-info">
+                    <div class="product-name">Auriculares Bluetooth</div>
+                    <div class="product-sku">SKU: AB-003</div>
+                    <div class="product-description">Auriculares inalámbricos con cancelación de ruido y 30 horas de batería</div>
+                    <div class="product-price">$199.99</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('AB-003', 'Auriculares Bluetooth', 199.99, this)">
+                        Agregar al Carrito
+                    </button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(45deg, #f39c12, #e67e22);">⌚</div>
+                <div class="product-info">
+                    <div class="product-name">Smartwatch Pro</div>
+                    <div class="product-sku">SKU: SW-004</div>
+                    <div class="product-description">Reloj inteligente con GPS, monitor cardíaco y resistencia al agua</div>
+                    <div class="product-price">$349.99</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('SW-004', 'Smartwatch Pro', 349.99, this)">
+                        Agregar al Carrito
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="cart-summary">
+            <h2 style="text-align: center; color: #2c3e50; margin-bottom: 20px;">🛒 Carrito de Compras</h2>
+            
+            <div class="cart-items" id="cartItems">
+                <div class="empty-cart" id="emptyCart">
+                    Tu carrito está vacío. ¡Agrega algunos productos!
+                </div>
+            </div>
+
+            <div class="cart-total" id="cartTotal" style="display: none;">
+                Total: $0.00
+            </div>
+
+            <button class="whatsapp-btn" id="whatsappBtn" onclick="sendToWhatsApp()" disabled>
+                <span>📱</span>
+                Comprar por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+
+        function addToCart(sku, name, price, buttonElement) {
+            const existingItem = cart.find(item => item.sku === sku);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    sku: sku,
+                    name: name,
+                    price: price,
+                    quantity: 1
+                });
+            }
+            
+            updateCartDisplay();
+            
+            // Animación de bounce al botón
+            if (buttonElement) {
+                buttonElement.classList.add('bounce');
+                setTimeout(() => {
+                    buttonElement.classList.remove('bounce');
+                }, 600);
+            }
+        }
+
+        function removeFromCart(sku) {
+            cart = cart.filter(item => item.sku !== sku);
+            updateCartDisplay();
+        }
+
+        function updateQuantity(sku, change) {
+            const item = cart.find(item => item.sku === sku);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(sku);
+                } else {
+                    updateCartDisplay();
+                }
+            }
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const whatsappBtn = document.getElementById('whatsappBtn');
+            const emptyCart = document.getElementById('emptyCart');
+
+            // Verificar que todos los elementos existan
+            if (!cartItems || !cartTotal || !whatsappBtn || !emptyCart) {
+                console.log('Algunos elementos del DOM no están disponibles aún');
+                return;
+            }
+
+            if (cart.length === 0) {
+                emptyCart.style.display = 'block';
+                cartTotal.style.display = 'none';
+                whatsappBtn.disabled = true;
+                return;
+            }
+
+            emptyCart.style.display = 'none';
+            
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-sku">${item.sku} - ${item.price.toFixed(2)}</div>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <button class="qty-btn" onclick="updateQuantity('${item.sku}', -1)">-</button>
+                        <span style="min-width: 30px; text-align: center; font-weight: bold;">${item.quantity}</span>
+                        <button class="qty-btn" onclick="updateQuantity('${item.sku}', 1)">+</button>
+                    </div>
+                    <button class="remove-btn" onclick="removeFromCart('${item.sku}')">Eliminar</button>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotal.innerHTML = `Total: ${total.toFixed(2)}`;
+            cartTotal.style.display = 'block';
+            whatsappBtn.disabled = false;
+        }
+
+        function sendToWhatsApp() {
+            if (cart.length === 0) return;
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            let message = "¡Hola! Me interesa realizar la siguiente compra:\n\n";
+            message += "🛒 *PRODUCTOS:*\n";
+            
+            cart.forEach(item => {
+                message += `• ${item.name}\n`;
+                message += `  SKU: ${item.sku}\n`;
+                message += `  Cantidad: ${item.quantity}\n`;
+                message += `  Precio unitario: $${item.price.toFixed(2)}\n`;
+                message += `  Subtotal: $${(item.price * item.quantity).toFixed(2)}\n\n`;
+            });
+            
+            message += `💰 *TOTAL: $${total.toFixed(2)}*\n\n`;
+            message += "Por favor, confirma la disponibilidad y método de pago. ¡Gracias!";
+            
+            // Reemplaza este número con tu número de WhatsApp (formato: 521234567890)
+            const phoneNumber = "5215512345678"; // Cambia este número por el tuyo
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            window.open(whatsappURL, '_blank');
+        }
+
+        // Inicializar la vista del carrito cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartDisplay();
+        });
+    </script>
+</body>
+</html>
