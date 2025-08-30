@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -269,16 +270,16 @@
                 grid-template-columns: 1fr;
                 padding: 20px;
             }
-            
+
             .header h1 {
                 font-size: 2em;
             }
-            
+
             .cart-item {
                 flex-direction: column;
                 gap: 10px;
             }
-            
+
             .cart-item-quantity {
                 margin: 10px 0;
             }
@@ -348,7 +349,7 @@
 
         <div class="cart-summary">
             <h2 style="text-align: center; color: #2c3e50; margin-bottom: 20px;">🛒 Carrito de Compras</h2>
-            
+
             <div class="cart-items" id="cartItems">
                 <div class="empty-cart" id="emptyCart">
                     Tu carrito está vacío. ¡Agrega algunos productos!
@@ -371,7 +372,7 @@
 
         function addToCart(sku, name, price, buttonElement) {
             const existingItem = cart.find(item => item.sku === sku);
-            
+
             if (existingItem) {
                 existingItem.quantity += 1;
             } else {
@@ -382,9 +383,9 @@
                     quantity: 1
                 });
             }
-            
+
             updateCartDisplay();
-            
+
             // Animación de bounce al botón
             if (buttonElement) {
                 buttonElement.classList.add('bounce');
@@ -431,7 +432,7 @@
             }
 
             emptyCart.style.display = 'none';
-            
+
             cartItems.innerHTML = cart.map(item => `
                 <div class="cart-item">
                     <div class="cart-item-info">
@@ -457,10 +458,10 @@
             if (cart.length === 0) return;
 
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
+
             let message = "¡Hola! Me interesa realizar la siguiente compra:\n\n";
             message += "🛒 *PRODUCTOS:*\n";
-            
+
             cart.forEach(item => {
                 message += `• ${item.name}\n`;
                 message += `  SKU: ${item.sku}\n`;
@@ -468,16 +469,16 @@
                 message += `  Precio unitario: $${item.price.toFixed(2)}\n`;
                 message += `  Subtotal: $${(item.price * item.quantity).toFixed(2)}\n\n`;
             });
-            
+
             message += `💰 *TOTAL: $${total.toFixed(2)}*\n\n`;
             message += "Por favor, confirma la disponibilidad y método de pago. ¡Gracias!";
-            
+
             // Reemplaza este número con tu número de WhatsApp (formato: 521234567890)
             const phoneNumber = "5215512345678"; // Cambia este número por el tuyo
-            
+
             const encodedMessage = encodeURIComponent(message);
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-            
+
             window.open(whatsappURL, '_blank');
         }
 

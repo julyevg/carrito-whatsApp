@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛒 Carrito de Compras - Tienda Online</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛒 Tienda Online</h1>
+            <div class="cart-summary">
+                <span id="cart-count">0</span> productos - 
+                <span id="cart-total">$0</span>
+                <button id="view-cart-btn" class="btn btn-secondary">Ver Carrito</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Formulario para parámetros de la API -->
+            <section class="api-params">
+                <h2>Configurar Búsqueda</h2>
+                <div class="params-form">
+                    <div class="form-group">
+                        <label for="categoria">ID Categoría:</label>
+                        <input type="number" id="categoria" value="3">
+                    </div>
+                    <div class="form-group">
+                        <label for="lineaAprobada">Línea Aprobada:</label>
+                        <input type="number" id="lineaAprobada" value="3200">
+                    </div>
+                    <button id="load-products" class="btn btn-primary">Cargar Productos</button>
+                </div>
+            </section>
+
+            <!-- Lista de productos -->
+            <section class="products">
+                <h2>Productos Disponibles</h2>
+                <div id="loading" class="loading hidden">Cargando productos...</div>
+                <div id="error-message" class="error hidden"></div>
+                <div id="products-grid" class="products-grid"></div>
+            </section>
+
+            <!-- Modal del carrito -->
+            <div id="cart-modal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>🛒 Mi Carrito</h2>
+                        <button id="close-cart" class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="cart-items"></div>
+                        <div class="cart-total">
+                            <strong>Total: <span id="modal-cart-total">$0</span></strong>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="clear-cart" class="btn btn-danger">Vaciar Carrito</button>
+                        <button id="checkout" class="btn btn-success">Proceder al Pago</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
