@@ -22,6 +22,11 @@ const checkoutBtn = document.getElementById('checkout');
 // URL de la API
 const API_URL = 'https://g4vucvqjy3dkmlhfwulogss2aa0cbfcb.lambda-url.us-east-1.on.aws';
 
+// Función para obtener un ID único y consistente del producto
+function obtenerIdProducto(producto) {
+    return producto.id || producto.idProducto || producto.codigo || producto.sku;
+}
+
 // Función para obtener parámetros de la URL
 function obtenerParametrosURL() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -34,21 +39,52 @@ function obtenerParametrosURL() {
 // Función para inicializar parámetros desde la URL
 function inicializarParametrosDesdeURL() {
     const params = obtenerParametrosURL();
-    
+
     // Si hay parámetros en la URL, usarlos y ocultar el formulario
     if (params.idCategoria && params.lineaAprobada) {
         categoriaInput.value = params.idCategoria;
         lineaAprobadaInput.value = params.lineaAprobada;
-        
+
         // Ocultar la sección de configuración
         const apiParamsSection = document.querySelector('.api-params');
         if (apiParamsSection) {
             apiParamsSection.style.display = 'none';
         }
-        
+
         // Cargar productos automáticamente
         cargarProductos();
     }
+}
+
+// Función para enviar producto por WhatsApp
+function enviarPorWhatsApp(idProducto) {
+    const producto = productos.find(p => p.id === idProducto);
+
+    if (!producto) {
+        mostrarError('Producto no encontrado');
+        return;
+    }
+
+    const nombre = producto.nombre || producto.name || producto.descripcion || 'Producto sin nombre';
+    const precio = producto.precio || producto.price || 0;
+
+    // Crear el mensaje para WhatsApp
+    const mensaje = `¡Hola! Me interesa este producto:
+
+📦 Producto: ${nombre}
+🆔 ID: ${idProducto}
+💰 Precio: $${formatearPrecio(precio)}
+
+¿Podrías darme más información?`;
+
+    // Codificar el mensaje para URL
+    const mensajeCodificado = encodeURIComponent(mensaje);
+
+    // URL de WhatsApp
+    const urlWhatsApp = `https://api.whatsapp.com/send/?phone=+15551471282&text=${mensajeCodificado}&type=phone_number&app_absent=0`;
+
+    // Abrir WhatsApp en una nueva ventana/pestaña
+    window.open(urlWhatsApp, '_blank');
 }
 
 // Event Listeners
@@ -57,32 +93,32 @@ document.addEventListener('DOMContentLoaded', function() {
     viewCartBtn.addEventListener('click', mostrarCarrito);
     clearCartBtn.addEventListener('click', vaciarCarrito);
     checkoutBtn.addEventListener('click', procederPago);
-    
+
     // Event listeners para cerrar el modal (múltiples métodos)
     closeCartBtn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         cerrarCarrito();
     });
-    
+
     // Cerrar modal haciendo clic fuera de él
     cartModal.addEventListener('click', function(e) {
         if (e.target === cartModal) {
             cerrarCarrito();
         }
     });
-    
+
     // Cerrar modal con tecla ESC
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && !cartModal.classList.contains('hidden')) {
             cerrarCarrito();
         }
     });
-    
+
     // Cargar carrito desde localStorage
     cargarCarritoDesdeStorage();
     actualizarResumenCarrito();
-    
+
     // Inicializar parámetros desde la URL
     inicializarParametrosDesdeURL();
 });
@@ -91,15 +127,15 @@ document.addEventListener('DOMContentLoaded', function() {
 async function cargarProductos() {
     const idCategoria = parseInt(categoriaInput.value);
     const lineaAprobada = parseInt(lineaAprobadaInput.value);
-    
+
     if (!idCategoria || !lineaAprobada) {
         mostrarError('Por favor, completa todos los campos correctamente.');
         return;
     }
-    
+
     mostrarCargando(true);
     ocultarError();
-    
+
     try {
         const response = await fetch(API_URL, {
             method: 'POST',
@@ -111,20 +147,27 @@ async function cargarProductos() {
                 lineaAprobada: lineaAprobada
             })
         });
-        
+
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        
+
         if (Array.isArray(data)) {
-            productos = data;
+            // Normalizar los productos para asegurar que tengan un ID único
+            productos = data.map((producto, index) => {
+                return {
+                    ...producto,
+                    // Asegurar que cada producto tenga un ID único consistente
+                    id: obtenerIdProducto(producto) || `producto_${index}_${Date.now()}`
+                };
+            });
             mostrarProductos(productos);
         } else {
             throw new Error('La respuesta de la API no es válida');
         }
-        
+
     } catch (error) {
         console.error('Error al cargar productos:', error);
         mostrarError(`Error al cargar productos: ${error.message}`);
@@ -136,12 +179,12 @@ async function cargarProductos() {
 // Función para mostrar productos en la interfaz
 function mostrarProductos(productos) {
     productsGrid.innerHTML = '';
-    
+
     if (productos.length === 0) {
         productsGrid.innerHTML = '<p class="no-products">No se encontraron productos para los parámetros especificados.</p>';
         return;
     }
-    
+
     productos.forEach(producto => {
         const productCard = crearTarjetaProducto(producto);
         productsGrid.appendChild(productCard);
@@ -152,13 +195,13 @@ function mostrarProductos(productos) {
 function crearTarjetaProducto(producto) {
     const card = document.createElement('div');
     card.className = 'product-card';
-    
+
     // Obtener propiedades del producto de manera segura
     const nombre = producto.nombre || producto.name || producto.descripcion || 'Producto sin nombre';
     const descripcion = producto.descripcion || producto.description || '';
     const precio = producto.precio || producto.price || 0;
-    const id = producto.id || producto.idProducto || Math.random().toString(36).substr(2, 9);
-    
+    const id = producto.id; // Ahora usamos el ID ya normalizado
+
     card.innerHTML = `
         <div class="product-name">${nombre}</div>
         <div class="product-description">${descripcion}</div>
@@ -169,12 +212,14 @@ function crearTarjetaProducto(producto) {
                 <input type="number" class="quantity-input" value="1" min="1" max="99">
                 <button class="quantity-btn" onclick="cambiarCantidad(this, 1)">+</button>
             </div>
-            <button class="btn btn-primary" onclick="agregarAlCarrito('${id}', this)">
-                Agregar al Carrito
-            </button>
+            <div class="action-buttons">
+                <button class="btn btn-whatsapp" onclick="enviarPorWhatsApp('${id}')" title="Consultar por WhatsApp">
+                    <span class="whatsapp-icon">📱</span> Comprar
+                </button>
+            </div>
         </div>
     `;
-    
+
     return card;
 }
 
@@ -188,18 +233,26 @@ function cambiarCantidad(btn, delta) {
 
 // Función para agregar producto al carrito
 function agregarAlCarrito(idProducto, btn) {
-    const producto = productos.find(p => (p.id || p.idProducto || Math.random().toString(36).substr(2, 9)) == idProducto);
+    console.log('Buscando producto con ID:', idProducto);
+
+    // Buscar el producto usando el ID normalizado
+    const producto = productos.find(p => p.id === idProducto);
+
+    console.log('Producto encontrado:', producto);
+    console.log('Todos los productos:', productos);
+
     if (!producto) {
         mostrarError('Producto no encontrado');
+        console.error('No se encontró el producto con ID:', idProducto);
         return;
     }
-    
+
     const card = btn.closest('.product-card');
     const cantidad = parseInt(card.querySelector('.quantity-input').value);
-    
+
     // Buscar si el producto ya está en el carrito
     const itemExistente = carrito.find(item => item.id === idProducto);
-    
+
     if (itemExistente) {
         itemExistente.cantidad += cantidad;
     } else {
@@ -210,10 +263,10 @@ function agregarAlCarrito(idProducto, btn) {
             cantidad: cantidad
         });
     }
-    
+
     guardarCarritoEnStorage();
     actualizarResumenCarrito();
-    
+
     // Feedback visual
     btn.textContent = '¡Agregado!';
     btn.style.backgroundColor = '#28a745';
@@ -227,7 +280,7 @@ function agregarAlCarrito(idProducto, btn) {
 function actualizarResumenCarrito() {
     const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
     const totalPrecio = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-    
+
     cartCountElement.textContent = totalItems;
     cartTotalElement.textContent = `$${formatearPrecio(totalPrecio)}`;
 }
@@ -250,13 +303,13 @@ function cerrarCarrito() {
 // Función para actualizar la vista del carrito en el modal
 function actualizarVistaCarrito() {
     cartItemsContainer.innerHTML = '';
-    
+
     if (carrito.length === 0) {
         cartItemsContainer.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">Tu carrito está vacío</p>';
         modalCartTotal.textContent = '$0';
         return;
     }
-    
+
     carrito.forEach((item, index) => {
         const cartItem = document.createElement('div');
         cartItem.className = 'cart-item';
@@ -268,7 +321,7 @@ function actualizarVistaCarrito() {
             <div class="cart-item-actions">
                 <div class="quantity-selector">
                     <button class="quantity-btn" onclick="cambiarCantidadCarrito(${index}, -1)">-</button>
-                    <input type="number" class="quantity-input" value="${item.cantidad}" min="1" max="99" 
+                    <input type="number" class="quantity-input" value="${item.cantidad}" min="1" max="99"
                            onchange="actualizarCantidadCarrito(${index}, this.value)">
                     <button class="quantity-btn" onclick="cambiarCantidadCarrito(${index}, 1)">+</button>
                 </div>
@@ -277,7 +330,7 @@ function actualizarVistaCarrito() {
         `;
         cartItemsContainer.appendChild(cartItem);
     });
-    
+
     const totalPrecio = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     modalCartTotal.textContent = `$${formatearPrecio(totalPrecio)}`;
 }
@@ -310,7 +363,7 @@ function eliminarDelCarrito(index) {
 // Función para vaciar todo el carrito
 function vaciarCarrito() {
     if (carrito.length === 0) return;
-    
+
     if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
         carrito = [];
         guardarCarritoEnStorage();
@@ -325,17 +378,17 @@ function procederPago() {
         alert('Tu carrito está vacío');
         return;
     }
-    
+
     const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     const resumen = carrito.map(item => `${item.nombre} x${item.cantidad}`).join('\n');
-    
+
     alert(`¡Gracias por tu compra!\n\nResumen:\n${resumen}\n\nTotal: $${formatearPrecio(total)}\n\nEn una aplicación real, aquí se procesaría el pago.`);
-    
+
     // Vaciar carrito después del "pago"
     carrito = [];
     guardarCarritoEnStorage();
     actualizarResumenCarrito();
-    
+
     // Asegurar que el modal se cierre
     setTimeout(() => {
         cerrarCarrito();
