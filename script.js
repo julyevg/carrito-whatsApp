@@ -198,7 +198,7 @@ function crearTarjetaProducto(producto) {
     card.className = 'product-card';
 
     // Obtener propiedades del producto de manera segura
-    const nombre = producto.nombre_producto || producto.name || producto.descripcion || 'Producto sin nombre';
+    const nombre = producto.nombre_producto || producto.name || producto.descripcion || 'Producto sin nombre ***';
     const descripcion = producto.descripcion || producto.description || '';
     const precio = producto.precio || producto.price || 0;
     const id = producto.id; // Ahora usamos el ID ya normalizado
@@ -259,7 +259,7 @@ function agregarAlCarrito(idProducto, btn) {
     } else {
         carrito.push({
             id: idProducto,
-            nombre: producto.nombre_producto || producto.name || producto.descripcion || 'Producto sin nombre',
+            nombre: producto.nombre_producto || producto.name || producto.descripcion || 'Producto sin nombre33',
             precio: producto.precio || producto.price || 0,
             cantidad: cantidad
         });
