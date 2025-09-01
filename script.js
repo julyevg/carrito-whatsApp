@@ -65,7 +65,7 @@ function enviarPorWhatsApp(idProducto) {
         return;
     }
 
-    const nombre = producto.nombre || producto.name || producto.descripcion || 'Producto sin nombre';
+    const nombre = producto.nombre || producto.nombre_producto || producto.descripcion || 'Producto sin nombre';
     const precio = producto.precio || producto.price || 0;
 
     // Crear el mensaje para WhatsApp
