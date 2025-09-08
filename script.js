@@ -74,7 +74,7 @@ function enviarPorWhatsApp(idProducto) {
 
 📦 Producto: ${nombre}
 🆔 ID: ${idProducto}
-💰 Precio: $${formatearPrecio(precio)}
+💰 Precio: S./ ${formatearPrecio(precio)}
 
 ¿Podrías darme más información?`;
 
@@ -206,7 +206,7 @@ function crearTarjetaProducto(producto) {
     card.innerHTML = `
         <div class="product-name">${nombre}</div>
         <div class="product-description">${descripcion}</div>
-        <div class="product-price">$${formatearPrecio(precio)}</div>
+        <div class="product-price">S./ ${formatearPrecio(precio)}</div>
         <div class="product-actions">
             <div class="quantity-selector">
                 <button class="quantity-btn" onclick="cambiarCantidad(this, -1)">-</button>
@@ -283,7 +283,7 @@ function actualizarResumenCarrito() {
     const totalPrecio = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
 
     cartCountElement.textContent = totalItems;
-    cartTotalElement.textContent = `$${formatearPrecio(totalPrecio)}`;
+    cartTotalElement.textContent = `S./ ${formatearPrecio(totalPrecio)}`;
 }
 
 // Función para mostrar el modal del carrito
@@ -307,7 +307,7 @@ function actualizarVistaCarrito() {
 
     if (carrito.length === 0) {
         cartItemsContainer.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">Tu carrito está vacío</p>';
-        modalCartTotal.textContent = '$0';
+        modalCartTotal.textContent = 'S./ 0';
         return;
     }
 
@@ -317,7 +317,7 @@ function actualizarVistaCarrito() {
         cartItem.innerHTML = `
             <div class="cart-item-info">
                 <div class="cart-item-name">${item.nombre}</div>
-                <div class="cart-item-price">$${formatearPrecio(item.precio)} c/u</div>
+                <div class="cart-item-price">S./ ${formatearPrecio(item.precio)} c/u</div>
             </div>
             <div class="cart-item-actions">
                 <div class="quantity-selector">
@@ -333,7 +333,7 @@ function actualizarVistaCarrito() {
     });
 
     const totalPrecio = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-    modalCartTotal.textContent = `$${formatearPrecio(totalPrecio)}`;
+    modalCartTotal.textContent = `S./ ${formatearPrecio(totalPrecio)}`;
 }
 
 // Función para cambiar cantidad en el carrito
@@ -383,7 +383,7 @@ function procederPago() {
     const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     const resumen = carrito.map(item => `${item.nombre} x${item.cantidad}`).join('\n');
 
-    alert(`¡Gracias por tu compra!\n\nResumen:\n${resumen}\n\nTotal: $${formatearPrecio(total)}\n\nEn una aplicación real, aquí se procesaría el pago.`);
+    alert(`¡Gracias por tu compra!\n\nResumen:\n${resumen}\n\nTotal: S./ ${formatearPrecio(total)}\n\nEn una aplicación real, aquí se procesaría el pago.`);
 
     // Vaciar carrito después del "pago"
     carrito = [];
