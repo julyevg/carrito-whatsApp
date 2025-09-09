@@ -74,7 +74,7 @@ function enviarPorWhatsApp(idProducto) {
 
 📦 Producto: ${nombre}
 🆔 ID: ${idProducto}
-💰 Precio: S./ ${formatearPrecio(precio)}
+💰 Precio: S./ ${formatearPrecio(precio).replace(',','.'}
 
 ¿Podrías darme más información?`;
 
