@@ -7,28 +7,28 @@
 
 :root {
     /* Paleta de colores principal */
-    --primary-color: #6366f1;          /* Indigo vibrante */
-    --primary-light: #818cf8;          /* Indigo claro */
-    --primary-dark: #4f46e5;           /* Indigo oscuro */
-    
+    --primary-color: #0071ce;          /* Indigo vibrante */
+    --primary-light: #0071ce;          /* Indigo claro */
+    --primary-dark: #0071ce;           /* Indigo oscuro */
+
     --secondary-color: #64748b;        /* Slate */
     --secondary-light: #94a3b8;        /* Slate claro */
     --secondary-dark: #475569;         /* Slate oscuro */
-    
+
     --accent-color: #06b6d4;           /* Cyan */
     --accent-light: #22d3ee;           /* Cyan claro */
-    
+
     --success-color: #10b981;          /* Emerald */
     --success-light: #34d399;          /* Emerald claro */
     --success-dark: #059669;           /* Emerald oscuro */
-    
+
     --warning-color: #f59e0b;          /* Amber */
     --warning-light: #fbbf24;          /* Amber claro */
-    
+
     --danger-color: #ef4444;           /* Red */
     --danger-light: #f87171;           /* Red claro */
     --danger-dark: #dc2626;            /* Red oscuro */
-    
+
     /* Colores neutros */
     --gray-50: #f8fafc;
     --gray-100: #f1f5f9;
@@ -40,29 +40,29 @@
     --gray-700: #334155;
     --gray-800: #1e293b;
     --gray-900: #0f172a;
-    
+
     /* Colores de fondo */
     --bg-primary: #ffffff;
     --bg-secondary: var(--gray-50);
     --bg-tertiary: var(--gray-100);
-    
+
     /* Colores de texto */
     --text-primary: var(--gray-900);
     --text-secondary: var(--gray-600);
     --text-tertiary: var(--gray-500);
-    
+
     /* Sombras */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    
+
     /* Bordes radius */
     --radius-sm: 6px;
     --radius-md: 8px;
     --radius-lg: 12px;
     --radius-xl: 16px;
-    
+
     /* Espaciado */
     --spacing-xs: 0.5rem;
     --spacing-sm: 0.75rem;
@@ -130,11 +130,11 @@ h1 {
     gap: var(--spacing-lg);
     font-size: 1.125rem;
     font-weight: 600;
-    background: rgba(255,255,255,0.15);
+
     padding: var(--spacing-sm) var(--spacing-lg);
     border-radius: var(--radius-lg);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
+
 }
 
 /* Botones */
@@ -616,31 +616,31 @@ h2 {
         gap: 1rem;
         text-align: center;
     }
-    
+
     .params-form {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .form-group {
         min-width: auto;
     }
-    
+
     .products-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .modal-content {
         width: 95%;
         margin: 10px;
     }
-    
+
     .cart-item {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
     }
-    
+
     .cart-item-actions {
         align-self: flex-end;
     }
@@ -648,24 +648,24 @@ h2 {
 
 /* Animaciones */
 @keyframes fadeIn {
-    from { 
-        opacity: 0; 
-        transform: translateY(30px) scale(0.95); 
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
     }
-    to { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
 @keyframes pulse {
-    0%, 100% { 
-        opacity: 1; 
-        transform: scale(1); 
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
     }
-    50% { 
-        opacity: 0.7; 
-        transform: scale(1.05); 
+    50% {
+        opacity: 0.7;
+        transform: scale(1.05);
     }
 }
 
@@ -747,4 +747,32 @@ h2 {
     background: var(--bg-secondary);
     border-radius: var(--radius-lg);
     border: 2px dashed var(--gray-300);
+}
+
+.product-info {
+  flex: 1; /* ocupa todo el espacio disponible */
+}
+
+.product-image {
+  flex-shrink: 0; /* evita que la imagen se reduzca demasiado */
+  margin-left: 1rem;
+}
+
+.product-image img {
+  width: 80px;   /* tamaño fijo */
+  height: auto;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.product-image {
+  flex: 0 1 150px; /* máximo 150px de ancho en desktop */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fit-picture{
+  width: 100%;
+}
+.cart-summary img {
+  width: 50%;
 }

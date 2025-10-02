@@ -65,7 +65,7 @@ function enviarPorWhatsApp(idProducto) {
         return;
     }
 
-    
+
     const nombre = producto.nombre || producto.nombre_producto || producto.descripcion || 'Producto sin nombre ---';
     const precio = producto.precio || producto.price || 0;
 
@@ -203,10 +203,15 @@ function crearTarjetaProducto(producto) {
     const precio = producto.precio || producto.price || 0;
     const id = producto.id; // Ahora usamos el ID ya normalizado
 
+    console.log(producto, '----')
     card.innerHTML = `
         <div class="product-name">${nombre}</div>
         <div class="product-description">${descripcion}</div>
         <div class="product-price">S./ ${formatearPrecio(precio)}</div>
+        <div class="product-price"><img
+          class="fit-picture"
+          src="${producto.imagen_array[0]}"
+          alt="Grapefruit slice atop a pile of other slices" /> </div>
         <div class="product-actions">
             <div class="quantity-selector">
                 <button class="quantity-btn" onclick="cambiarCantidad(this, -1)">-</button>
@@ -310,14 +315,17 @@ function actualizarVistaCarrito() {
         modalCartTotal.textContent = 'S./ 0';
         return;
     }
+    console.log(item, 'item')
 
     carrito.forEach((item, index) => {
         const cartItem = document.createElement('div');
+
         cartItem.className = 'cart-item';
         cartItem.innerHTML = `
             <div class="cart-item-info">
                 <div class="cart-item-name">${item.nombre}</div>
                 <div class="cart-item-price">S./ ${formatearPrecio(item.precio)} c/u</div>
+
             </div>
             <div class="cart-item-actions">
                 <div class="quantity-selector">
