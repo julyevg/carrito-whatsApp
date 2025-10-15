@@ -19,6 +19,7 @@ const modalCartTotal = document.getElementById('modal-cart-total');
 const clearCartBtn = document.getElementById('clear-cart');
 const checkoutBtn = document.getElementById('checkout');
 
+console.log( 'cartModal')
 // URL de la API
 const API_URL = 'https://g4vucvqjy3dkmlhfwulogss2aa0cbfcb.lambda-url.us-east-1.on.aws';
 
@@ -88,10 +89,18 @@ function enviarPorWhatsApp(idProducto) {
     window.open(urlWhatsApp, '_blank');
 }
 
+// Función para mostrar el modal del carrito
+function mostrarCarrito() {
+
+    cartModal?.classList.remove('hidden');
+    cartModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+    actualizarVistaCarrito();
+}
 // Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
     loadProductsBtn.addEventListener('click', cargarProductos);
-    viewCartBtn.addEventListener('click', mostrarCarrito);
+    viewCartBtn?.addEventListener('click', mostrarCarrito);
     clearCartBtn.addEventListener('click', vaciarCarrito);
     checkoutBtn.addEventListener('click', procederPago);
 
@@ -287,17 +296,13 @@ function actualizarResumenCarrito() {
     const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
     const totalPrecio = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
 
+    if(cartCountElement!==null) {
     cartCountElement.textContent = totalItems;
     cartTotalElement.textContent = `S./ ${formatearPrecio(totalPrecio)}`;
+    }
 }
 
-// Función para mostrar el modal del carrito
-function mostrarCarrito() {
-    cartModal.classList.remove('hidden');
-    cartModal.style.display = 'flex';
-    document.body.style.overflow = 'hidden'; // Prevenir scroll del body
-    actualizarVistaCarrito();
-}
+
 
 // Función para cerrar el modal del carrito
 function cerrarCarrito() {
@@ -308,6 +313,7 @@ function cerrarCarrito() {
 
 // Función para actualizar la vista del carrito en el modal
 function actualizarVistaCarrito() {
+ 
     cartItemsContainer.innerHTML = '';
 
     if (carrito.length === 0) {
