@@ -83,7 +83,7 @@ function enviarPorWhatsApp(idProducto) {
     const mensajeCodificado = encodeURIComponent(mensaje);
 
     // URL de WhatsApp
-    const urlWhatsApp = `https://api.whatsapp.com/send/?phone=+15551471282&text=${mensajeCodificado}&type=phone_number&app_absent=0`;
+    const urlWhatsApp = `https://api.whatsapp.com/send/?phone=+15556341330&text=${mensajeCodificado}&type=phone_number&app_absent=0`;
 
     // Abrir WhatsApp en una nueva ventana/pestaña
     window.open(urlWhatsApp, '_blank');
